@@ -173,7 +173,7 @@ const Index = () => {
                 Discover the <span className="text-gradient">classics</span>.
               </h1>
               <p className="mt-4 max-w-xl text-sm text-muted-foreground md:text-base">
-                A live library powered by the open TVMaze grid. Real posters, ratings, and links — wrapped in a neon hub.
+                A live library powered by the open CPN . Real posters, ratings, and links — wrapped in a neon hub.
               </p>
             </div>
 
@@ -285,7 +285,7 @@ const Index = () => {
       </main>
 
       <footer className="mt-16 border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
-        CPN Movies 2030 — neon streaming hub • Data via the open TVMaze grid
+        CPN Movies 2030 — neon streaming hub • Data via the CAT CPN
       </footer>
 
       <DetailModal
