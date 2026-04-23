@@ -54,7 +54,7 @@ export const Splash = ({ onDone }: { onDone: () => void }) => {
           <span className="text-gradient">CAT PHOENIX</span>
         </p>
         <p className="mt-1 text-sm text-muted-foreground">
-          a.k.a <span className="font-semibold text-foreground">OUNDO NELSON</span>
+          <span className="font-semibold text-foreground">OUNDO NELSON</span>
         </p>
 
         <div className="mt-10 flex items-center gap-2 text-xs text-muted-foreground">
