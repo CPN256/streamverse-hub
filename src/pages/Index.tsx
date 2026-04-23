@@ -121,6 +121,7 @@ const Index = () => {
           <nav className="order-2 ml-auto flex items-center gap-1 md:order-3">
             {[
               { id: "home" as const, icon: Home, label: "Home" },
+              { id: "movies" as const, icon: Clapperboard, label: "Movies" },
               { id: "anime" as const, icon: Tv, label: "Anime" },
               { id: "music" as const, icon: Music, label: "Music" },
               { id: "download" as const, icon: Download, label: "Get" },
@@ -280,6 +281,7 @@ const Index = () => {
         {tab === "music" && <MusicHub />}
         {tab === "download" && <Downloader />}
         {tab === "anime" && <AnimeHub />}
+        {tab === "movies" && <MoviesHub />}
       </main>
 
       <footer className="mt-16 border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
