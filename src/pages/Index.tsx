@@ -72,6 +72,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen pb-32 scrollbar-cyber">
+      {showSplash && (
+        <Splash
+          onDone={() => {
+            sessionStorage.setItem("cpn-splash-seen", "1");
+            setShowSplash(false);
+          }}
+        />
+      )}
       {/* Decorative bg */}
       <div
         aria-hidden
@@ -113,8 +121,11 @@ const Index = () => {
           <nav className="order-2 ml-auto flex items-center gap-1 md:order-3">
             {[
               { id: "home" as const, icon: Home, label: "Home" },
+              { id: "music" as const, icon: Music, label: "Music" },
+              { id: "download" as const, icon: Download, label: "Get" },
               { id: "dashboard" as const, icon: LayoutDashboard, label: "Stats" },
               { id: "favorites" as const, icon: Heart, label: "Favs" },
+              { id: "apis" as const, icon: KeyRound, label: "APIs" },
             ].map(({ id, icon: Icon, label }) => (
               <button
                 key={id}
