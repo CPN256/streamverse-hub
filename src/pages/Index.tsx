@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles, Music, Download, Tv } from "lucide-react";
+import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles, Music, Download, Tv, Clapperboard } from "lucide-react";
 import { fetchTrending, searchShows, type Show } from "@/lib/tvmaze";
 import { MediaCard } from "@/components/MediaCard";
 import { DetailModal } from "@/components/DetailModal";
@@ -9,14 +9,15 @@ import { Splash } from "@/components/Splash";
 import { MusicHub } from "@/components/MusicHub";
 import { Downloader } from "@/components/Downloader";
 import { AnimeHub } from "@/components/AnimeHub";
+import { MoviesHub } from "@/components/MoviesHub";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-type Tab = "home" | "dashboard" | "favorites" | "music" | "download" | "anime";
+type Tab = "home" | "dashboard" | "favorites" | "music" | "download" | "anime" | "movies";
 
 const Index = () => {
-  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("cpn-splash-seen"));
+  const [showSplash, setShowSplash] = useState(true);
   const [tab, setTab] = useState<Tab>("home");
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,7 +76,6 @@ const Index = () => {
       {showSplash && (
         <Splash
           onDone={() => {
-            sessionStorage.setItem("cpn-splash-seen", "1");
             setShowSplash(false);
           }}
         />
@@ -121,6 +121,7 @@ const Index = () => {
           <nav className="order-2 ml-auto flex items-center gap-1 md:order-3">
             {[
               { id: "home" as const, icon: Home, label: "Home" },
+              { id: "movies" as const, icon: Clapperboard, label: "Movies" },
               { id: "anime" as const, icon: Tv, label: "Anime" },
               { id: "music" as const, icon: Music, label: "Music" },
               { id: "download" as const, icon: Download, label: "Get" },
@@ -280,6 +281,7 @@ const Index = () => {
         {tab === "music" && <MusicHub />}
         {tab === "download" && <Downloader />}
         {tab === "anime" && <AnimeHub />}
+        {tab === "movies" && <MoviesHub />}
       </main>
 
       <footer className="mt-16 border-t border-border/60 py-6 text-center text-xs text-muted-foreground">

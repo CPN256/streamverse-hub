@@ -64,4 +64,29 @@ export const subtitles = {
   subttSearch: (q: string) => call("/subttsearch/search", { q }),
 };
 
+/* ---------- FZMovies ---------- */
+export interface FzMovie {
+  id?: string;
+  title: string;
+  year?: string | number;
+  image?: string;
+  thumbnail?: string;
+  cover?: string;
+  url?: string;
+  link?: string;
+  quality?: string;
+  size?: string;
+  genre?: string;
+  rating?: string | number;
+  description?: string;
+  download_url?: string;
+}
+
+export const fzmovies = {
+  search: (q: string) => call<{ results: FzMovie[] }>("/fzmovies/search", { q }),
+  latest: () => call<{ results: FzMovie[] }>("/fzmovies/latest"),
+  info: (url: string) => call<{ result: FzMovie }>("/fzmovies/info", { url }),
+  download: (url: string) => call<{ result: FzMovie }>("/fzmovies/download", { url }),
+};
+
 export const API_BASE = BASE;
