@@ -276,6 +276,10 @@ const Index = () => {
             )}
           </section>
         )}
+
+        {tab === "music" && <MusicHub />}
+        {tab === "download" && <Downloader />}
+        {tab === "apis" && <ApiSettings />}
       </main>
 
       <footer className="mt-16 border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
