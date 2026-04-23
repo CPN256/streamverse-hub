@@ -1,17 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles } from "lucide-react";
+import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles, KeyRound, Music, Download } from "lucide-react";
 import { fetchTrending, searchShows, type Show } from "@/lib/tvmaze";
 import { MediaCard } from "@/components/MediaCard";
 import { DetailModal } from "@/components/DetailModal";
 import { Chatbot } from "@/components/Chatbot";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { Splash } from "@/components/Splash";
+import { ApiSettings } from "@/components/ApiSettings";
+import { MusicHub } from "@/components/MusicHub";
+import { Downloader } from "@/components/Downloader";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-type Tab = "home" | "dashboard" | "favorites";
+type Tab = "home" | "dashboard" | "favorites" | "music" | "download" | "apis";
 
 const Index = () => {
+  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("cpn-splash-seen"));
   const [tab, setTab] = useState<Tab>("home");
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,6 +72,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen pb-32 scrollbar-cyber">
+      {showSplash && (
+        <Splash
+          onDone={() => {
+            sessionStorage.setItem("cpn-splash-seen", "1");
+            setShowSplash(false);
+          }}
+        />
+      )}
       {/* Decorative bg */}
       <div
         aria-hidden
@@ -108,8 +121,11 @@ const Index = () => {
           <nav className="order-2 ml-auto flex items-center gap-1 md:order-3">
             {[
               { id: "home" as const, icon: Home, label: "Home" },
+              { id: "music" as const, icon: Music, label: "Music" },
+              { id: "download" as const, icon: Download, label: "Get" },
               { id: "dashboard" as const, icon: LayoutDashboard, label: "Stats" },
               { id: "favorites" as const, icon: Heart, label: "Favs" },
+              { id: "apis" as const, icon: KeyRound, label: "APIs" },
             ].map(({ id, icon: Icon, label }) => (
               <button
                 key={id}
@@ -260,6 +276,10 @@ const Index = () => {
             )}
           </section>
         )}
+
+        {tab === "music" && <MusicHub />}
+        {tab === "download" && <Downloader />}
+        {tab === "apis" && <ApiSettings />}
       </main>
 
       <footer className="mt-16 border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
