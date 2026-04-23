@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles, Music, Download, Tv } from "lucide-react";
+import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles, Music, Download, Tv, Clapperboard } from "lucide-react";
 import { fetchTrending, searchShows, type Show } from "@/lib/tvmaze";
 import { MediaCard } from "@/components/MediaCard";
 import { DetailModal } from "@/components/DetailModal";
@@ -9,14 +9,15 @@ import { Splash } from "@/components/Splash";
 import { MusicHub } from "@/components/MusicHub";
 import { Downloader } from "@/components/Downloader";
 import { AnimeHub } from "@/components/AnimeHub";
+import { MoviesHub } from "@/components/MoviesHub";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-type Tab = "home" | "dashboard" | "favorites" | "music" | "download" | "anime";
+type Tab = "home" | "dashboard" | "favorites" | "music" | "download" | "anime" | "movies";
 
 const Index = () => {
-  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("cpn-splash-seen"));
+  const [showSplash, setShowSplash] = useState(true);
   const [tab, setTab] = useState<Tab>("home");
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,7 +76,6 @@ const Index = () => {
       {showSplash && (
         <Splash
           onDone={() => {
-            sessionStorage.setItem("cpn-splash-seen", "1");
             setShowSplash(false);
           }}
         />
