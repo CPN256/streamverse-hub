@@ -1,17 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles } from "lucide-react";
+import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles, KeyRound, Music, Download } from "lucide-react";
 import { fetchTrending, searchShows, type Show } from "@/lib/tvmaze";
 import { MediaCard } from "@/components/MediaCard";
 import { DetailModal } from "@/components/DetailModal";
 import { Chatbot } from "@/components/Chatbot";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { Splash } from "@/components/Splash";
+import { ApiSettings } from "@/components/ApiSettings";
+import { MusicHub } from "@/components/MusicHub";
+import { Downloader } from "@/components/Downloader";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-type Tab = "home" | "dashboard" | "favorites";
+type Tab = "home" | "dashboard" | "favorites" | "music" | "download" | "apis";
 
 const Index = () => {
+  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("cpn-splash-seen"));
   const [tab, setTab] = useState<Tab>("home");
   const [shows, setShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState(true);
