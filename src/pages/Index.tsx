@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles, KeyRound, Music, Download } from "lucide-react";
+import { Search, Heart, Home, LayoutDashboard, Film, Flame, Tv2, Trophy, Eye, Sparkles, Music, Download, Tv } from "lucide-react";
 import { fetchTrending, searchShows, type Show } from "@/lib/tvmaze";
 import { MediaCard } from "@/components/MediaCard";
 import { DetailModal } from "@/components/DetailModal";
 import { Chatbot } from "@/components/Chatbot";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { Splash } from "@/components/Splash";
-import { ApiSettings } from "@/components/ApiSettings";
 import { MusicHub } from "@/components/MusicHub";
 import { Downloader } from "@/components/Downloader";
+import { AnimeHub } from "@/components/AnimeHub";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-type Tab = "home" | "dashboard" | "favorites" | "music" | "download" | "apis";
+type Tab = "home" | "dashboard" | "favorites" | "music" | "download" | "anime";
 
 const Index = () => {
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("cpn-splash-seen"));
@@ -121,11 +121,11 @@ const Index = () => {
           <nav className="order-2 ml-auto flex items-center gap-1 md:order-3">
             {[
               { id: "home" as const, icon: Home, label: "Home" },
+              { id: "anime" as const, icon: Tv, label: "Anime" },
               { id: "music" as const, icon: Music, label: "Music" },
               { id: "download" as const, icon: Download, label: "Get" },
               { id: "dashboard" as const, icon: LayoutDashboard, label: "Stats" },
               { id: "favorites" as const, icon: Heart, label: "Favs" },
-              { id: "apis" as const, icon: KeyRound, label: "APIs" },
             ].map(({ id, icon: Icon, label }) => (
               <button
                 key={id}
@@ -279,7 +279,7 @@ const Index = () => {
 
         {tab === "music" && <MusicHub />}
         {tab === "download" && <Downloader />}
-        {tab === "apis" && <ApiSettings />}
+        {tab === "anime" && <AnimeHub />}
       </main>
 
       <footer className="mt-16 border-t border-border/60 py-6 text-center text-xs text-muted-foreground">

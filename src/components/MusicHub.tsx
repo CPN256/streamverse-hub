@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Music, Search, Play, Pause, Download, ExternalLink, Disc3 } from "lucide-react";
+import { Music, Search, Play, Pause, Download, ExternalLink, Disc3, Link2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { dl } from "@/lib/davidcyril";
 
 interface Track {
   id: number;
@@ -18,6 +19,9 @@ export const MusicHub = () => {
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState<number | null>(null);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const [mp3Url, setMp3Url] = useState("");
+  const [mp3Loading, setMp3Loading] = useState(false);
+  const [downloadingId, setDownloadingId] = useState<number | null>(null);
 
   const search = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -60,10 +64,45 @@ export const MusicHub = () => {
     setPlaying(t.id);
   };
 
-  const download = (t: Track) => {
-    const cobalt = `https://cobalt.tools/?u=${encodeURIComponent(t.trackUrl)}`;
-    window.open(cobalt, "_blank", "noopener");
-    toast.success("Opened downloader in new tab.");
+  const download = async (t: Track) => {
+    setDownloadingId(t.id);
+    try {
+      // The /song endpoint accepts a music URL — iTunes track URL works as a search reference.
+      const res: any = await dl.song(t.trackUrl);
+      const link =
+        res?.result?.download_url || res?.DownloadLink || res?.result?.url || res?.url;
+      if (link) {
+        window.open(link, "_blank", "noopener");
+        toast.success("Download started!");
+      } else {
+        toast.error("Couldn't fetch MP3 — try the URL downloader below.");
+      }
+    } catch {
+      toast.error("Music download API unreachable.");
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
+  const downloadByUrl = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mp3Url.trim()) return toast.error("Paste a Spotify, YouTube, or song URL.");
+    setMp3Loading(true);
+    try {
+      const isSpotify = mp3Url.toLowerCase().includes("spotify");
+      const res: any = isSpotify ? await dl.spotify(mp3Url.trim()) : await dl.song(mp3Url.trim());
+      const link = res?.DownloadLink || res?.result?.download_url || res?.result?.url;
+      if (link) {
+        window.open(link, "_blank", "noopener");
+        toast.success(`MP3 ready: ${res?.title || "Track"}`);
+      } else {
+        toast.error(res?.message || "Couldn't extract MP3.");
+      }
+    } catch {
+      toast.error("Music API failed.");
+    } finally {
+      setMp3Loading(false);
+    }
   };
 
   return (
@@ -72,7 +111,7 @@ export const MusicHub = () => {
         Music <span className="text-gradient">Grid</span>
       </h1>
       <p className="mb-8 text-muted-foreground">
-        Search 70M+ tracks via iTunes. Preview, then download via cobalt.tools.
+        Search 70M+ tracks via iTunes. Preview & download MP3 via the David Cyril grid.
       </p>
 
       <form onSubmit={search} className="mb-8 flex gap-2">
@@ -91,6 +130,28 @@ export const MusicHub = () => {
         >
           Search
         </button>
+      </form>
+
+      <form onSubmit={downloadByUrl} className="mb-8 rounded-2xl border border-secondary/40 bg-gradient-card p-4 shadow-card">
+        <label className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <Link2 className="h-3.5 w-3.5" /> Direct MP3 download — paste a Spotify or YouTube link
+        </label>
+        <div className="flex gap-2">
+          <input
+            value={mp3Url}
+            onChange={(e) => setMp3Url(e.target.value)}
+            placeholder="https://open.spotify.com/track/…  or  https://youtu.be/…"
+            className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
+          />
+          <button
+            type="submit"
+            disabled={mp3Loading}
+            className="flex items-center gap-1.5 rounded-xl bg-gradient-primary px-5 text-sm font-semibold text-primary-foreground shadow-glow disabled:opacity-60"
+          >
+            {mp3Loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            MP3
+          </button>
+        </div>
       </form>
 
       {loading ? (
@@ -140,9 +201,12 @@ export const MusicHub = () => {
                 <div className="mt-2 flex gap-1.5">
                   <button
                     onClick={() => download(t)}
+                    disabled={downloadingId === t.id}
                     className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-primary/20 px-2 py-1.5 text-xs font-semibold text-primary hover:bg-primary hover:text-primary-foreground transition-smooth"
                   >
-                    <Download className="h-3 w-3" /> Get
+                    {downloadingId === t.id
+                      ? <Loader2 className="h-3 w-3 animate-spin" />
+                      : <Download className="h-3 w-3" />} Get
                   </button>
                   <a
                     href={t.trackUrl}
